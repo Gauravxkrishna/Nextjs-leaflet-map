@@ -1,9 +1,17 @@
 // src/components/MapComponent.js
 'use client';
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
+
+// Dynamically import react-leaflet components
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+const useMap = dynamic(() => import('react-leaflet').then(mod => mod.useMap), { ssr: false });
+
+import L from 'leaflet';
 
 // Fix Leaflet's default icon issue
 delete L.Icon.Default.prototype._getIconUrl;
