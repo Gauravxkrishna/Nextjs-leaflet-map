@@ -11,9 +11,9 @@ const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { 
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
 const useMap = dynamic(() => import('react-leaflet').then(mod => mod.useMap), { ssr: false });
 
+// Leaflet icon configuration
 import L from 'leaflet';
 
-// Fix Leaflet's default icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -23,13 +23,16 @@ L.Icon.Default.mergeOptions({
 
 // Custom Marker Component
 const CustomMarker = ({ position, popupText }) => {
-  const map = useMap();
+  const map = useMap(); // Access the map instance
 
   const handleMarkerClick = () => {
-    map.setView(position, map.getZoom(), {
-      animate: true,
-      duration: 1
-    });
+    if (map && map.flyTo) {
+      // Use flyTo for a smooth transition
+      map.flyTo(position, map.getZoom(), {
+        animate: true,
+        duration: 1.5, // Duration in seconds
+      });
+    }
   };
 
   return (
@@ -53,6 +56,7 @@ const MapComponent = () => {
       center={[20.5937, 78.9629]}
       zoom={5}
       style={{ height: '500px', width: '100%' }}
+      className="map-container"
     >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
